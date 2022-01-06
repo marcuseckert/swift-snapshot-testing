@@ -261,18 +261,35 @@ public func verifySnapshot<Value, Format>(
         diffable = reference
       }
       #endif
-
-      guard let (failure, attachments) = snapshotting.diffing.diff(reference, diffable) else {
-        return nil
-      }
-
+      
+      
       let artifactsUrl = URL(
         fileURLWithPath: ProcessInfo.processInfo.environment["SNAPSHOT_ARTIFACTS"] ?? NSTemporaryDirectory(), isDirectory: true
       )
       let artifactsSubUrl = artifactsUrl.appendingPathComponent(fileName)
       try fileManager.createDirectory(at: artifactsSubUrl, withIntermediateDirectories: true)
-      let failedSnapshotFileUrl = artifactsSubUrl.appendingPathComponent(snapshotFileUrl.lastPathComponent)
+      let baseURL = artifactsSubUrl
+        .appendingPathComponent(snapshotFileUrl.lastPathComponent)
+        .deletingPathExtension()
+
+      let failedSnapshotFileUrl = baseURL.appendingPathComponent("-fail").appendingPathExtension(snapshotFileUrl.pathExtension)
+      let diffURL = baseURL.appendingPathComponent("-diff").appendingPathExtension(snapshotFileUrl.pathExtension)
+      guard let (failure, attachments, difference) = snapshotting.diffing.diff(reference, diffable) else {
+        
+        if fileManager.fileExists(atPath: diffURL.path) {
+          try? fileManager.removeItem(at: diffURL)
+        }
+        if fileManager.fileExists(atPath: failedSnapshotFileUrl.path) {
+          try? fileManager.removeItem(at: failedSnapshotFileUrl)
+        }
+        
+        return nil
+      }
+
       try snapshotting.diffing.toData(diffable).write(to: failedSnapshotFileUrl)
+      if let differenceValue = difference {
+        try snapshotting.diffing.toData(differenceValue).write(to: diffURL)
+      }
 
       if !attachments.isEmpty {
         #if !os(Linux)
