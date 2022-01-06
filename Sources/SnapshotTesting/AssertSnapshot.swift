@@ -275,9 +275,9 @@ public func verifySnapshot<Value, Format>(
       print("snapshotFileUrl \(snapshotFileUrl)")
       print("base url \(baseURL)")
 
-      let failedSnapshotFileUrl = baseURL.appendingPathComponent("-fail", isDirectory: false).appendingPathExtension(snapshotFileUrl.pathExtension)
+      let failedSnapshotFileUrl = baseURL.appendingPathExtension("-fail").appendingPathExtension(snapshotFileUrl.pathExtension)
       print("fail url \(failedSnapshotFileUrl)")
-      let diffURL = baseURL.appendingPathComponent("-diff", isDirectory: false).appendingPathExtension(snapshotFileUrl.pathExtension)
+      let diffURL = baseURL.appendingPathExtension("-diff").appendingPathExtension(snapshotFileUrl.pathExtension)
       guard let (failure, attachments, difference) = snapshotting.diffing.diff(reference, diffable) else {
         
         if fileManager.fileExists(atPath: diffURL.path) {
