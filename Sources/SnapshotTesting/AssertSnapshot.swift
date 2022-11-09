@@ -271,12 +271,9 @@ public func verifySnapshot<Value, Format>(
       let baseURL = artifactsSubUrl
         .appendingPathComponent(snapshotFileUrl.lastPathComponent)
         .deletingPathExtension()
-      print("snapshotFileUrl.lastPathComponent \(snapshotFileUrl.lastPathComponent)")
-      print("snapshotFileUrl \(snapshotFileUrl)")
-      print("base url \(baseURL)")
+     
 
       let failedSnapshotFileUrl = baseURL.appendingPathExtension("-fail").appendingPathExtension(snapshotFileUrl.pathExtension)
-      print("fail url \(failedSnapshotFileUrl)")
       let diffURL = baseURL.appendingPathExtension("-diff").appendingPathExtension(snapshotFileUrl.pathExtension)
       guard let (failure, attachments, difference) = snapshotting.diffing.diff(reference, diffable) else {
         
