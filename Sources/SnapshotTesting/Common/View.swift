@@ -1097,6 +1097,7 @@ extension UIApplication {
 func prepareView(
   config: ViewImageConfig,
   drawHierarchyInKeyWindow: Bool,
+  onWillSnapshot: (()->())?,
   traits: UITraitCollection,
   view: UIView,
   viewController: UIViewController
@@ -1122,6 +1123,7 @@ func prepareView(
     )
   }
   let dispose = add(traits: traits, viewController: viewController, to: window)
+    onWillSnapshot?()
 
   if size.width == 0 || size.height == 0 {
     // Try to call sizeToFit() if the view still has invalid size
@@ -1136,6 +1138,7 @@ func prepareView(
 func snapshotView(
   config: ViewImageConfig,
   drawHierarchyInKeyWindow: Bool,
+  onWillSnapshot: (()->())?,
   traits: UITraitCollection,
   view: UIView,
   viewController: UIViewController
@@ -1145,6 +1148,7 @@ func snapshotView(
     let dispose = prepareView(
       config: config,
       drawHierarchyInKeyWindow: drawHierarchyInKeyWindow,
+      onWillSnapshot: onWillSnapshot,
       traits: traits,
       view: view,
       viewController: viewController

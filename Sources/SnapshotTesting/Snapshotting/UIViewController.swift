@@ -16,6 +16,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
   ///   - traits: A trait collection override.
   public static func image(
     on config: ViewImageConfig,
+    onWillSnapshot: (()->())? = nil,
     precision: Float = 1,
     size: CGSize? = nil,
     traits: UITraitCollection = .init()
@@ -26,6 +27,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
         snapshotView(
           config: size.map { .init(safeArea: config.safeArea, size: $0, traits: config.traits) } ?? config,
           drawHierarchyInKeyWindow: false,
+          onWillSnapshot: onWillSnapshot,
           traits: traits,
           view: viewController.view,
           viewController: viewController
@@ -42,6 +44,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
   ///   - traits: A trait collection override.
   public static func image(
     drawHierarchyInKeyWindow: Bool = false,
+    onWillSnapshot: (()->())? = nil,
     precision: Float = 1,
     size: CGSize? = nil,
     traits: UITraitCollection = .init()
@@ -52,6 +55,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
         snapshotView(
           config: .init(safeArea: .zero, size: size, traits: traits),
           drawHierarchyInKeyWindow: drawHierarchyInKeyWindow,
+          onWillSnapshot: onWillSnapshot,
           traits: .init(),
           view: viewController.view,
           viewController: viewController
@@ -67,6 +71,7 @@ extension Snapshotting where Value == UIViewController, Format == String {
       let dispose = prepareView(
         config: .init(),
         drawHierarchyInKeyWindow: false,
+        onWillSnapshot: nil,
         traits: .init(),
         view: viewController.view,
         viewController: viewController
@@ -91,6 +96,7 @@ extension Snapshotting where Value == UIViewController, Format == String {
   ///   - traits: A trait collection override.
   public static func recursiveDescription(
     on config: ViewImageConfig = .init(),
+    onWillSnapshot: (()->())? = nil,
     size: CGSize? = nil,
     traits: UITraitCollection = .init()
     )
@@ -99,6 +105,7 @@ extension Snapshotting where Value == UIViewController, Format == String {
         let dispose = prepareView(
           config: .init(safeArea: config.safeArea, size: size ?? config.size, traits: config.traits),
           drawHierarchyInKeyWindow: false,
+          onWillSnapshot: onWillSnapshot,
           traits: traits,
           view: viewController.view,
           viewController: viewController
