@@ -12,6 +12,13 @@ import WebKit
 #endif
 
 #if os(iOS) || os(tvOS)
+
+extension UIView {
+  
+  public static let kRootSnapshotVCViewTag = 35235632651236213
+  
+}
+
 public struct ViewImageConfig {
   public enum Orientation {
     case landscape
@@ -1189,6 +1196,7 @@ private func add(traits: UITraitCollection, viewController: UIViewController, to
   let rootViewController: UIViewController
   if viewController != window.rootViewController {
     rootViewController = UIViewController()
+    rootViewController.view.tag = UIView.kRootSnapshotVCViewTag
     rootViewController.view.backgroundColor = .clear
     rootViewController.view.frame = window.frame
     rootViewController.view.translatesAutoresizingMaskIntoConstraints =
