@@ -556,13 +556,15 @@ public struct ViewImageConfig {
     return .init(safeArea: .init(top: 20, left: 0, bottom: 0, right: 0), size: size, traits: traits)
   }
 
-  public static func mac_1024() -> ViewImageConfig {
+  public static let Mac_1024 = ViewImageConfig.Mac(size: CGSizeMake(1024, 768))
 
-    return .init(safeArea: .init(top: 00, left: 0, bottom: 0, right: 0), size: .init(width: 1024, height: 768), traits: .Mac_1024)
+  public static func Mac(size: CGSize) -> ViewImageConfig {
+
+    return .init(safeArea: .init(top: 00, left: 0, bottom: 0, right: 0), size: .init(width: size.width, height: size.height), traits: .Mac_1024)
 
   }
 
-  
+
   #elseif os(tvOS)
 
 
