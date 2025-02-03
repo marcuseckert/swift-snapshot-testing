@@ -556,6 +556,13 @@ public struct ViewImageConfig {
     return .init(safeArea: .init(top: 20, left: 0, bottom: 0, right: 0), size: size, traits: traits)
   }
   #elseif os(tvOS)
+
+  public static func mac_1024() -> ViewImageConfig {
+
+    return .init(safeArea: .init(top: 00, left: 0, bottom: 0, right: 0), size: .init(width: 1024, height: 768), traits: .Mac_1024)
+
+  }
+
   public static let tv = ViewImageConfig(
     safeArea: .init(top: 60, left: 90, bottom: 60, right: 90),
     size: .init(width: 1920, height: 1080),
@@ -945,8 +952,21 @@ extension UITraitCollection {
       )
     }
   }
-  
 
+  public static func Mac()
+  -> UITraitCollection {
+    let base: [UITraitCollection] = [
+      .init(displayGamut: .SRGB),
+      .init(displayScale: 1),
+      .init(userInterfaceIdiom: .mac),
+      .init(forceTouchCapability: .available),
+      .init(layoutDirection: .leftToRight),
+      .init(preferredContentSizeCategory: .large),
+
+    ]
+    return .init(traitsFrom: base)
+
+  }
 
   public static let iPadMini = iPad
   public static let iPadMini_Compact_SplitView = iPadCompactSplitView
@@ -960,6 +980,7 @@ extension UITraitCollection {
   public static let iPadPro11_Compact_SplitView = iPadCompactSplitView
   public static let iPadPro12_9 = iPad
   public static let iPadPro12_9_Compact_SplitView = iPadCompactSplitView
+  public static let Mac_1024 = Mac()
 
   private static let iPad = UITraitCollection(
     traitsFrom: [
