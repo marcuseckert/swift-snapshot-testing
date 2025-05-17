@@ -19,6 +19,18 @@ extension UIView {
   
 }
 
+public enum SnapStrategy {
+  case snapInNewWindow
+  case snapInExistingWindow
+
+  //Utilize the simulator's key window in order to render `UIAppearance` and `UIVisualEffect`s. This option requires a host application for your tests and will _not_ work for framework test targets.
+  case snapUsingDrawHierarchyInExistingWindow
+
+  var retainSafeAreas: Bool {
+    self == .snapInExistingWindow || self == .snapUsingDrawHierarchyInExistingWindow
+  }
+}
+
 public struct ViewImageConfig {
   public enum Orientation {
     case landscape
@@ -1031,8 +1043,10 @@ func addImagesForRenderedViews(_ view: View) -> [Async<View>] {
     ?? view.subviews.flatMap(addImagesForRenderedViews)
 }
 
+
 extension View {
   var snapshot: Async<Image>? {
+
     func inWindow<T>(_ perform: () -> T) -> T {
       #if os(macOS)
       let superview = self.superview
@@ -1129,7 +1143,7 @@ extension UIApplication {
 
 func prepareView(
   config: ViewImageConfig,
-  drawHierarchyInKeyWindow: Bool,
+  snapStrategy: SnapStrategy,
   onWillSnapshot: (()->())?,
   traits: UITraitCollection,
   view: UIView,
@@ -1137,14 +1151,14 @@ func prepareView(
   ) -> () -> Void {
   let size = config.size ?? viewController.view.frame.size
   view.frame.size = size
-  if view != viewController.view {
-    viewController.view.bounds = view.bounds
-    viewController.view.addSubview(view)
-  }
+    if view != viewController.view {
+      viewController.view.bounds = view.bounds
+      viewController.view.addSubview(view)
+    }
   let traits = UITraitCollection(traitsFrom: [config.traits, traits])
   let window: UIWindow
-  if drawHierarchyInKeyWindow {
-    guard let keyWindow = getKeyWindow() else {
+    if snapStrategy == .snapInExistingWindow || snapStrategy == .snapUsingDrawHierarchyInExistingWindow {
+      guard let keyWindow = viewController.view.window ?? getKeyWindow() else {
       fatalError("'drawHierarchyInKeyWindow' requires tests to be run in a host application")
     }
     window = keyWindow
@@ -1170,7 +1184,7 @@ func prepareView(
 
 func snapshotView(
   config: ViewImageConfig,
-  drawHierarchyInKeyWindow: Bool,
+  snapStrategy: SnapStrategy,
   onWillSnapshot: (()->())?,
   traits: UITraitCollection,
   view: UIView,
@@ -1180,38 +1194,198 @@ func snapshotView(
     let initialFrame = view.frame
     let dispose = prepareView(
       config: config,
-      drawHierarchyInKeyWindow: drawHierarchyInKeyWindow,
+      snapStrategy: snapStrategy,
       onWillSnapshot: onWillSnapshot,
       traits: traits,
       view: view,
       viewController: viewController
     )
     // NB: Avoid safe area influence.
-    if config.safeArea == .zero { view.frame.origin = .init(x: offscreen, y: offscreen) }
+    if config.safeArea == .zero, snapStrategy.retainSafeAreas == false {
+      view.frame.origin = .init(x: offscreen, y: offscreen)
+    }
 
     return (view.snapshot ?? Async { callback in
-      addImagesForRenderedViews(view).sequence().run { views in
+      let a = addImagesForRenderedViews(view)
+
+      a.sequence().run { views in
         callback(
-          renderer(bounds: view.bounds, for: traits).image { ctx in
-            if drawHierarchyInKeyWindow {
-              view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
-            } else {
-              view.layer.render(in: ctx.cgContext)
+          renderer(bounds: view.bounds, for: traits)
+            .image { ctx in
+              if snapStrategy == .snapUsingDrawHierarchyInExistingWindow {
+                view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+              } else {
+                view.layer.render(in: ctx.cgContext)
+              }
             }
-          }
         )
         views.forEach { $0.removeFromSuperview() }
         view.frame = initialFrame
       }
     }).map { dispose(); return $0 }
+  }
+
+
+func snapshotViewWithLocation(
+  config: ViewImageConfig,
+  snapStrategy: SnapStrategy,
+  onWillSnapshot: (()->())?,
+  traits: UITraitCollection,
+  view: UIView,
+  viewController: UIViewController
+)
+-> Async<(img: UIImage, origin: CGPoint)> {
+  let initialFrame = view.frame
+  let dispose = prepareView(
+    config: config,
+    snapStrategy: snapStrategy,
+    onWillSnapshot: onWillSnapshot,
+    traits: traits,
+    view: view,
+    viewController: viewController
+  )
+  // NB: Avoid safe area influence.
+  if config.safeArea == .zero, snapStrategy.retainSafeAreas == false {
+    view.frame.origin = .init(x: offscreen, y: offscreen)
+  }
+
+  return Async { callback in
+    let a = addImagesForRenderedViews(view)
+
+    a.sequence().run { views in
+      let img = renderer(bounds: view.bounds, for: traits)
+        .image { ctx in
+          if snapStrategy == .snapUsingDrawHierarchyInExistingWindow {
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+          } else {
+            view.layer.render(in: ctx.cgContext)
+          }
+        }
+#if targetEnvironment(macCatalyst)
+      let origin = view.window?.windowScene?.effectiveGeometry.systemFrame.origin ?? .zero
+#else
+      let origin = CGPoint.zero
+#endif
+      callback(
+        (img, origin)
+      )
+      views.forEach { $0.removeFromSuperview() }
+      view.frame = initialFrame
+    }
+  }.map { dispose(); return $0 }
+}
+
+func snapshotViews(
+  views: [View],
+  arrangement: ImageArrangement
+)
+-> Async<UIImage> {
+
+  return Async { callback in
+    
+    let images = views.compactMap{ view ->(UIImage, origin: CGPoint)? in
+      let img = renderer(bounds: view.bounds, for: .init())
+        .image(actions: { ctx in  view.layer.render(in: ctx.cgContext) })
+
+
+#if targetEnvironment(macCatalyst)
+      let origin = view.window?.windowScene?.effectiveGeometry.systemFrame.origin ?? .zero
+      return (img, origin)
+  #else
+      return (img, CGPoint.zero)
+    #endif
+    }
+    let minX = images.map{$0.1.x}.min() ?? 0.0
+    let minY = images.map{$0.1.y}.min() ?? 0.0
+
+    let image = combineImages(images: images,
+                              shift: CGPoint(x: -minX, y: -minY),
+                              arrangement: arrangement,
+                              traits: .init(),
+                              spacing: 15)!
+
+    callback(
+      image
+    )
+
+  }
 }
 
 private let offscreen: CGFloat = 10_000
 
+public enum ImageArrangement {
+  case unchanged
+  case horizontal
+  case vertical
+}
+
+func combineImages(images: [(UIImage, origin: CGPoint)],
+                   shift: CGPoint,
+                   arrangement: ImageArrangement,
+                   traits: UITraitCollection,
+                   spacing: CGFloat = 0) -> UIImage? {
+  guard !images.isEmpty else { return nil }
+
+  if images.count == 1 {
+    return images[0].0
+  }
+  var maxWidth: CGFloat = 0
+  var maxHeight: CGFloat = 0
+
+  for (image, offset) in images {
+    let imgRect = CGRectMake(offset.x + shift.x, offset.y + shift.y,
+                             image.size.width, image.size.height)
+
+    switch arrangement {
+    case .unchanged:
+      maxWidth = max(maxWidth, imgRect.maxX)
+      maxHeight = max(maxHeight, imgRect.maxY)
+    case .horizontal:
+      maxWidth += imgRect.size.width
+      maxHeight = max(maxHeight, imgRect.maxY)
+    case .vertical:
+      maxWidth = max(maxWidth, imgRect.maxX)
+      maxHeight += imgRect.size.height
+    }
+
+  }
+
+  let renderer = renderer(bounds: CGRectMake(0, 0, maxWidth, maxHeight), for: traits)
+  return renderer.image(actions: { context in
+
+    context.cgContext.clear(CGRect(x: 0, y: 0, width: maxWidth, height: maxHeight))
+
+    switch arrangement {
+    case .unchanged:
+      for (image, offset) in images {
+        image.draw(at:CGPoint(x: offset.x + shift.x, y: offset.y + shift.y))
+      }
+    case .horizontal:
+      var x = 0.0
+      for (image, offset) in images {
+        image.draw(at:CGPoint(x: x + shift.x, y: offset.y + shift.y))
+        x += image.size.width
+      }
+    case .vertical:
+      var y = 0.0
+      for (image, offset) in images {
+        image.draw(at:CGPoint(x: offset.x + shift.x, y: y + shift.y))
+        y += image.size.height
+      }
+    }
+
+  })
+}
+
 func renderer(bounds: CGRect, for traits: UITraitCollection) -> UIGraphicsImageRenderer {
   let renderer: UIGraphicsImageRenderer
   if #available(iOS 11.0, tvOS 11.0, *) {
-    renderer = UIGraphicsImageRenderer(bounds: bounds, format: .init(for: traits))
+    let format = UIGraphicsImageRendererFormat(for: traits)
+#if targetEnvironment(macCatalyst)
+      format.scale = 1.0
+#endif
+
+    renderer = UIGraphicsImageRenderer(bounds: bounds, format: format)
   } else {
     renderer = UIGraphicsImageRenderer(bounds: bounds)
   }
@@ -1220,13 +1394,14 @@ func renderer(bounds: CGRect, for traits: UITraitCollection) -> UIGraphicsImageR
 
 private func add(traits: UITraitCollection, viewController: UIViewController, to window: UIWindow) -> () -> Void {
   let rootViewController: UIViewController
+  let oldRoot = window.rootViewController
   if viewController != window.rootViewController {
     rootViewController = UIViewController()
     rootViewController.view.tag = UIView.kRootSnapshotVCViewTag
     rootViewController.view.backgroundColor = .clear
     rootViewController.view.frame = window.frame
     rootViewController.view.translatesAutoresizingMaskIntoConstraints =
-      viewController.view.translatesAutoresizingMaskIntoConstraints
+    viewController.view.translatesAutoresizingMaskIntoConstraints
     rootViewController.preferredContentSize = rootViewController.view.frame.size
     viewController.view.frame = rootViewController.view.frame
     rootViewController.view.addSubview(viewController.view)
@@ -1241,27 +1416,37 @@ private func add(traits: UITraitCollection, viewController: UIViewController, to
       ])
     }
     rootViewController.addChild(viewController)
+
+    rootViewController.setOverrideTraitCollection(traits, forChild: viewController)
+    viewController.didMove(toParent: rootViewController)
+
+    window.rootViewController = rootViewController
+
+    rootViewController.beginAppearanceTransition(true, animated: false)
+    rootViewController.endAppearanceTransition()
+
+    rootViewController.view.setNeedsLayout()
+    rootViewController.view.layoutIfNeeded()
+
+    viewController.view.setNeedsLayout()
+    viewController.view.layoutIfNeeded()
   } else {
     rootViewController = viewController
   }
-  rootViewController.setOverrideTraitCollection(traits, forChild: viewController)
-  viewController.didMove(toParent: rootViewController)
 
-  window.rootViewController = rootViewController
-
-  rootViewController.beginAppearanceTransition(true, animated: false)
-  rootViewController.endAppearanceTransition()
-
-  rootViewController.view.setNeedsLayout()
-  rootViewController.view.layoutIfNeeded()
-
-  viewController.view.setNeedsLayout()
-  viewController.view.layoutIfNeeded()
 
   return {
-    rootViewController.beginAppearanceTransition(false, animated: false)
-    rootViewController.endAppearanceTransition()
-    window.rootViewController = nil
+
+    if oldRoot != window.rootViewController {
+      rootViewController.beginAppearanceTransition(false, animated: false)
+      rootViewController.endAppearanceTransition()
+      window.rootViewController = oldRoot
+      oldRoot?.beginAppearanceTransition(true, animated: false)
+      oldRoot?.endAppearanceTransition()
+      oldRoot?.view.setNeedsLayout()
+      oldRoot?.view.layoutIfNeeded()
+    }
+
   }
 }
 

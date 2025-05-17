@@ -26,12 +26,12 @@ extension Snapshotting where Value: SwiftUI.View, Format == UIImage {
   /// A snapshot strategy for comparing SwiftUI Views based on pixel equality.
   ///
   /// - Parameters:
-  ///   - drawHierarchyInKeyWindow: Utilize the simulator's key window in order to render `UIAppearance` and `UIVisualEffect`s. This option requires a host application for your tests and will _not_ work for framework test targets.
+  ///   - snapStrategy:
   ///   - precision: The percentage of pixels that must match.
   ///   - size: A view size override.
   ///   - traits: A trait collection override.
   public static func image(
-    drawHierarchyInKeyWindow: Bool = false,
+    snapStrategy: SnapStrategy = .snapInNewWindow,
     precision: Float = 1,
     layout: SwiftUISnapshotLayout = .sizeThatFits,
     traits: UITraitCollection = .init()
@@ -71,7 +71,7 @@ extension Snapshotting where Value: SwiftUI.View, Format == UIImage {
 
         return snapshotView(
           config: config,
-          drawHierarchyInKeyWindow: drawHierarchyInKeyWindow,
+          snapStrategy: snapStrategy,
           onWillSnapshot: nil,
           traits: traits,
           view: controller.view,

@@ -26,8 +26,8 @@ extension Diffing where Value == UIImage {
       guard !compare(old, new, precision: precision) else { return nil }
       let difference = SnapshotTesting.diff(old, new)
       let message = new.size == old.size
-        ? "Newly-taken snapshot does not match reference."
-        : "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
+      ? "Newly-taken snapshot does not match reference."
+      : "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
       let oldAttachment = XCTAttachment(image: old)
       oldAttachment.name = "reference"
       let newAttachment = XCTAttachment(image: new)
@@ -41,8 +41,8 @@ extension Diffing where Value == UIImage {
       )
     }
   }
-  
-  
+
+
   /// Used when the image size has no width or no height to generated the default empty image
   private static func emptyImage() -> UIImage {
     let label = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 80))
@@ -80,14 +80,23 @@ let imageContextBytesPerPixel = 4
 private func compare(_ old: UIImage, _ new: UIImage, precision: Float) -> Bool {
   guard let oldCgImage = old.cgImage else { return false }
   guard let newCgImage = new.cgImage else { return false }
-  guard oldCgImage.width != 0 else { return false }
-  guard newCgImage.width != 0 else { return false }
-  guard oldCgImage.width == newCgImage.width else { return false }
-  guard oldCgImage.height != 0 else { return false }
-  guard newCgImage.height != 0 else { return false }
-  guard oldCgImage.height == newCgImage.height else { return false }
 
-  let byteCount = imageContextBytesPerPixel * oldCgImage.width * oldCgImage.height
+#if targetEnvironment(macCatalyst)
+  let oldSize = CGSizeMake(old.size.width * old.scale, old.size.height * old.scale)
+  let newSize = CGSizeMake(new.size.width * new.scale, new.size.height * new.scale)
+#else
+  let oldSize = (width: oldCgImage.width, height: oldCgImage.height)
+  let newSize = (width: newCgImage.width, height: newCgImage.height)
+#endif
+
+  guard oldSize.width != 0 else { return false }
+  guard newSize.width != 0 else { return false }
+  guard oldSize.width == newSize.width else { return false }
+  guard oldSize.height != 0 else { return false }
+  guard newSize.height != 0 else { return false }
+  guard oldSize.height == newSize.height else { return false }
+
+  let byteCount = imageContextBytesPerPixel * Int(oldSize.width) * Int(oldSize.height)
   var oldBytes = [UInt8](repeating: 0, count: byteCount)
   guard let oldContext = context(for: oldCgImage, data: &oldBytes) else { return false }
   guard let oldData = oldContext.data else { return false }
@@ -123,21 +132,52 @@ private func context(for cgImage: CGImage, data: UnsafeMutableRawPointer? = nil)
       space: colorSpace,
       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
     )
-    else { return nil }
+  else { return nil }
 
   context.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
   return context
 }
 
 private func diff(_ old: UIImage, _ new: UIImage) -> UIImage {
+
+#if targetEnvironment(macCatalyst)
+  let width = max(old.size.width * old.scale, new.size.width * new.scale)
+  let height = max(old.size.height * old.scale, new.size.height * new.scale)
+  let scale = old.scale == new.scale ? old.scale : 1.0
+  #else
   let width = max(old.size.width, new.size.width)
   let height = max(old.size.height, new.size.height)
   let scale = max(old.scale, new.scale)
+#endif
   UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), true, scale)
+#if targetEnvironment(macCatalyst)
+  new.withScale(scale)?.draw(at: .zero)
+  old.withScale(scale)?.draw(at: .zero, blendMode: .difference, alpha: 1)
+#else
   new.draw(at: .zero)
   old.draw(at: .zero, blendMode: .difference, alpha: 1)
+#endif
   let differenceImage = UIGraphicsGetImageFromCurrentImageContext()!
   UIGraphicsEndImageContext()
   return differenceImage
 }
+
+extension UIImage {
+  func withScale(_ scale: CGFloat) -> UIImage? {
+    if self.scale == scale {
+      return self
+    }
+    let newSize = CGSize(width: self.size.width * self.scale  / scale,
+                         height: self.size.height * self.scale / scale)
+    let rendererFormat = UIGraphicsImageRendererFormat()
+    rendererFormat.scale = scale
+
+    let renderer = UIGraphicsImageRenderer(size: newSize, format: rendererFormat)
+    return renderer.image { _ in
+      self.draw(in: CGRect(origin: .zero, size: newSize))
+    }
+  }
+}
+
 #endif
+

@@ -10,12 +10,12 @@ extension Snapshotting where Value == UIView, Format == UIImage {
   /// A snapshot strategy for comparing views based on pixel equality.
   ///
   /// - Parameters:
-  ///   - drawHierarchyInKeyWindow: Utilize the simulator's key window in order to render `UIAppearance` and `UIVisualEffect`s. This option requires a host application for your tests and will _not_ work for framework test targets.
+  ///   - snapStrategy:
   ///   - precision: The percentage of pixels that must match.
   ///   - size: A view size override.
   ///   - traits: A trait collection override.
   public static func image(
-    drawHierarchyInKeyWindow: Bool = false,
+    snapStrategy: SnapStrategy = .snapInNewWindow,
     onWillSnapshot: (()->())? = nil,
     precision: Float = 1,
     size: CGSize? = nil,
@@ -26,7 +26,7 @@ extension Snapshotting where Value == UIView, Format == UIImage {
       return SimplySnapshotting.image(precision: precision, scale: traits.displayScale).asyncPullback { view in
         snapshotView(
           config: .init(safeArea: .zero, size: size ?? view.frame.size, traits: .init()),
-          drawHierarchyInKeyWindow: drawHierarchyInKeyWindow,
+          snapStrategy: snapStrategy,
           onWillSnapshot: onWillSnapshot,
           traits: traits,
           view: view,
@@ -51,7 +51,7 @@ extension Snapshotting where Value == UIView, Format == String {
       return SimplySnapshotting.lines.pullback { view in
         let dispose = prepareView(
           config: .init(safeArea: .zero, size: size ?? view.frame.size, traits: traits),
-          drawHierarchyInKeyWindow: false,
+          snapStrategy: .snapInNewWindow,
           onWillSnapshot: nil,
           traits: .init(),
           view: view,
@@ -65,4 +65,26 @@ extension Snapshotting where Value == UIView, Format == String {
       }
   }
 }
+
+extension Snapshotting where Value == [UIView], Format == UIImage {
+  /// A snapshot strategy for comparing view controller views based on pixel equality.
+  public static var image: Snapshotting {
+    return .image()
+  }
+
+
+  public static func image(
+    snapStrategy: SnapStrategy = .snapInNewWindow,
+    filter: ((UIWindow)->Bool)? = nil,
+    precision: Float = 1
+  )
+  -> Snapshotting {
+    let traits = UITraitCollection()
+
+    return SimplySnapshotting.image(precision: precision, scale: traits.displayScale).asyncPullback { views in
+      return snapshotViews(views: views, arrangement: .unchanged)
+    }
+  }
+}
+
 #endif
