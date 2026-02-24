@@ -1151,14 +1151,14 @@ func prepareView(
   ) -> () -> Void {
   let size = config.size ?? viewController.view.frame.size
   view.frame.size = size
-    if view != viewController.view {
+    if view != viewController.view, !(view is UIWindow) {
       viewController.view.bounds = view.bounds
       viewController.view.addSubview(view)
     }
   let traits = UITraitCollection(traitsFrom: [config.traits, traits])
   let window: UIWindow
     if snapStrategy == .snapInExistingWindow || snapStrategy == .snapUsingDrawHierarchyInExistingWindow {
-      guard let keyWindow = viewController.view.window ?? getKeyWindow() else {
+      guard let keyWindow = view as? UIWindow ?? viewController.view.window ?? getKeyWindow() else {
       fatalError("'drawHierarchyInKeyWindow' requires tests to be run in a host application")
     }
     window = keyWindow
@@ -1191,20 +1191,37 @@ func snapshotView(
   viewController: UIViewController
   )
   -> Async<UIImage> {
-    let initialFrame = view.frame
-    let dispose = prepareView(
-      config: config,
-      snapStrategy: snapStrategy,
-      onWillSnapshot: onWillSnapshot,
-      traits: traits,
-      view: view,
-      viewController: viewController
-    )
-    // NB: Avoid safe area influence.
-    if config.safeArea == .zero, snapStrategy.retainSafeAreas == false {
-      view.frame.origin = .init(x: offscreen, y: offscreen)
-    }
 
+    var dispose: (()->())?
+    if !(view is UIWindow) {
+      dispose = prepareView(
+        config: config,
+        snapStrategy: snapStrategy,
+        onWillSnapshot: onWillSnapshot,
+        traits: traits,
+        view: view,
+        viewController: viewController
+      )
+    }
+    let initialFrame = view.frame
+    let initialSafeArea = viewController.additionalSafeAreaInsets
+    var reset = false
+    // NB: Avoid safe area influence.
+    if snapStrategy.retainSafeAreas == false {
+      reset = true
+
+      view.frame.origin = .init(x: offscreen, y: offscreen)
+
+      let topDiff = config.safeArea.top - viewController.view.safeAreaInsets.top
+      let leftDiff = config.safeArea.left - viewController.view.safeAreaInsets.left
+      let rightDiff = config.safeArea.right - viewController.view.safeAreaInsets.right
+      let bottomDiff = config.safeArea.bottom - viewController.view.safeAreaInsets.bottom
+      //doesn't work there
+      if (viewController is UINavigationController) == false {
+        viewController.additionalSafeAreaInsets = .init(top: topDiff, left: leftDiff, bottom: bottomDiff, right: rightDiff)
+      }
+    }
+//    view.frame.origin = .init(x: offscreen, y: offscreen)
     return (view.snapshot ?? Async { callback in
       let a = addImagesForRenderedViews(view)
 
@@ -1220,9 +1237,14 @@ func snapshotView(
             }
         )
         views.forEach { $0.removeFromSuperview() }
-        view.frame = initialFrame
+        if reset {
+          view.frame = initialFrame
+          viewController.additionalSafeAreaInsets = initialSafeArea
+        }
       }
-    }).map { dispose(); return $0 }
+    }).map {
+      dispose?();
+      return $0 }
   }
 
 
@@ -1284,6 +1306,7 @@ func snapshotViews(
   return Async { callback in
     
     let images = views.compactMap{ view ->(UIImage, origin: CGPoint)? in
+
       let img = renderer(bounds: view.bounds, for: .init())
         .image(actions: { ctx in  view.layer.render(in: ctx.cgContext) })
 
@@ -1342,14 +1365,14 @@ func combineImages(images: [(UIImage, origin: CGPoint)],
       maxHeight = max(maxHeight, imgRect.maxY)
     case .horizontal:
       maxWidth += imgRect.size.width
-      maxHeight = max(maxHeight, imgRect.maxY)
+      maxHeight = max(maxHeight, imgRect.height)
+
     case .vertical:
-      maxWidth = max(maxWidth, imgRect.maxX)
+      maxWidth = max(maxWidth, imgRect.width)
       maxHeight += imgRect.size.height
     }
 
   }
-
   let renderer = renderer(bounds: CGRectMake(0, 0, maxWidth, maxHeight), for: traits)
   return renderer.image(actions: { context in
 
@@ -1358,18 +1381,23 @@ func combineImages(images: [(UIImage, origin: CGPoint)],
     switch arrangement {
     case .unchanged:
       for (image, offset) in images {
-        image.draw(at:CGPoint(x: offset.x + shift.x, y: offset.y + shift.y))
+        var x = Int(offset.x + shift.x)
+        var y = Int(offset.y + shift.y)
+        if x % 2 != 0 { x -= 1 }
+        if y % 2 != 0 { y -= 1 }
+
+        image.draw(at:CGPoint(x: CGFloat(x), y: CGFloat(y)))
       }
     case .horizontal:
       var x = 0.0
-      for (image, offset) in images {
-        image.draw(at:CGPoint(x: x + shift.x, y: offset.y + shift.y))
+      for (image, _) in images {
+        image.draw(at:CGPoint(x: x, y: 0))
         x += image.size.width
       }
     case .vertical:
       var y = 0.0
-      for (image, offset) in images {
-        image.draw(at:CGPoint(x: offset.x + shift.x, y: y + shift.y))
+      for (image, _) in images {
+        image.draw(at:CGPoint(x: 0, y: y))
         y += image.size.height
       }
     }

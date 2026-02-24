@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -19,6 +19,19 @@
 			packageProductDependencies = (
 			);
 			productName = build;
+		};
+		2CA51CDC2EA134EF00452521 /* BuildRVJSX */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2CA51CDF2EA134EF00452521 /* Build configuration list for PBXAggregateTarget "BuildRVJSX" */;
+			buildPhases = (
+				2CA51CE02EA134F600452521 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = BuildRVJSX;
+			packageProductDependencies = (
+			);
+			productName = BuildRVJSX;
 		};
 /* End PBXAggregateTarget section */
 
@@ -61,6 +74,14 @@
 		2C1467FE2D6B98EA0048DC7E /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1467FD2D6B98EA0048DC7E /* UIWindow.swift */; };
 		2C1467FF2D6B98EA0048DC7E /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1467FD2D6B98EA0048DC7E /* UIWindow.swift */; };
 		2C1468002D6B98EA0048DC7E /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1467FD2D6B98EA0048DC7E /* UIWindow.swift */; };
+		2CA502392EA12F8700452521 /* libbrotlidec.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA502382EA12F8700452521 /* libbrotlidec.xcframework */; };
+		2CA5CD422EA129C000452521 /* libjxl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD242EA128A900452521 /* libjxl.xcframework */; };
+		2CA5CD432EA129C000452521 /* libbrotlienc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD262EA1294600452521 /* libbrotlienc.xcframework */; };
+		2CA5CD442EA129C000452521 /* libjxl_threads.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD272EA1294600452521 /* libjxl_threads.xcframework */; };
+		2CA5CD452EA129C000452521 /* libhwy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD2A2EA1295B00452521 /* libhwy.xcframework */; };
+		2CA5CD462EA129C000452521 /* libbrotlicommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD2C2EA1296300452521 /* libbrotlicommon.xcframework */; };
+		2CA5CD472EA129C000452521 /* libjxl_cms.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD322EA1298100452521 /* libjxl_cms.xcframework */; };
+		2CA5CD492EA129D800452521 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA5CD302EA1296F00452521 /* CoreGraphics.framework */; };
 		2CEE336D2D70B625004707D3 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE336C2D70B625004707D3 /* UIApplication.swift */; };
 		2CEE336E2D70B625004707D3 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE336C2D70B625004707D3 /* UIApplication.swift */; };
 		2CEE336F2D70B625004707D3 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEE336C2D70B625004707D3 /* UIApplication.swift */; };
@@ -300,6 +321,18 @@
 		2A69D6A4D06EB76C77493EB7 /* testCreateSnapshotWithExtendedDelimiter2.1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testCreateSnapshotWithExtendedDelimiter2.1.swift; sourceTree = "<group>"; };
 		2C0B36DC2D53DE1000F9A852 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2C1467FD2D6B98EA0048DC7E /* UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWindow.swift; sourceTree = "<group>"; };
+		2CA502382EA12F8700452521 /* libbrotlidec.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libbrotlidec.xcframework; path = Sources/JXL/libbrotlidec.xcframework; sourceTree = "<group>"; };
+		2CA51CE12EA1356500452521 /* RVJXL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RVJXL.xcframework; path = Products/RVJXL.xcframework; sourceTree = "<group>"; };
+		2CA5CD242EA128A900452521 /* libjxl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libjxl.xcframework; sourceTree = "<group>"; };
+		2CA5CD262EA1294600452521 /* libbrotlienc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libbrotlienc.xcframework; sourceTree = "<group>"; };
+		2CA5CD272EA1294600452521 /* libjxl_threads.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libjxl_threads.xcframework; sourceTree = "<group>"; };
+		2CA5CD2A2EA1295B00452521 /* libhwy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libhwy.xcframework; sourceTree = "<group>"; };
+		2CA5CD2C2EA1296300452521 /* libbrotlicommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libbrotlicommon.xcframework; sourceTree = "<group>"; };
+		2CA5CD2E2EA1296A00452521 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		2CA5CD302EA1296F00452521 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2CA5CD322EA1298100452521 /* libjxl_cms.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libjxl_cms.xcframework; sourceTree = "<group>"; };
+		2CA5CD392EA1299F00452521 /* RVJXL.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RVJXL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CA5CD612EA12A9B00452521 /* ACIPCBTLib.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = ACIPCBTLib.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/usr/lib/ACIPCBTLib.tbd; sourceTree = DEVELOPER_DIR; };
 		2CEE336C2D70B625004707D3 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		32BC721A155DB7D81BE69683 /* testUpdateSeveralSnapshotsWithLessLines.1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testUpdateSeveralSnapshotsWithLessLines.1.swift; sourceTree = "<group>"; };
 		34D7CFCA42A4D2168436F6C1 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
@@ -364,6 +397,22 @@
 		FD800FD3282956340AD7706A /* AssertInlineSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssertInlineSnapshot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2CA5CD3D2EA1299F00452521 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			publicHeaders = (
+				JXLDecoder.h,
+				JXLEncoder.h,
+				RVJXL.h,
+			);
+			target = 2CA5CD382EA1299F00452521 /* RVJXL */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2CA5CD3A2EA1299F00452521 /* RVJXL */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CA5CD3D2EA1299F00452521 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = RVJXL; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		1F992A9F69421CE0653EFBE5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -378,6 +427,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C0B36DE2D53DF4200F9A852 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CA5CD362EA1299F00452521 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CA5CD422EA129C000452521 /* libjxl.xcframework in Frameworks */,
+				2CA5CD432EA129C000452521 /* libbrotlienc.xcframework in Frameworks */,
+				2CA5CD442EA129C000452521 /* libjxl_threads.xcframework in Frameworks */,
+				2CA5CD492EA129D800452521 /* CoreGraphics.framework in Frameworks */,
+				2CA5CD452EA129C000452521 /* libhwy.xcframework in Frameworks */,
+				2CA5CD462EA129C000452521 /* libbrotlicommon.xcframework in Frameworks */,
+				2CA502392EA12F8700452521 /* libbrotlidec.xcframework in Frameworks */,
+				2CA5CD472EA129C000452521 /* libjxl_cms.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +473,7 @@
 				8563DC0D660D87E1CDE5D696 /* SnapshotTestingTests.xctest */,
 				AA79A05ABAE4F4EAF9E9F1E4 /* SnapshotTestingTests.xctest */,
 				1BD7AFAF336357D01E6E1E05 /* SnapshotTestingTests.xctest */,
+				2CA5CD392EA1299F00452521 /* RVJXL.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -465,9 +530,27 @@
 		2C0B36DB2D53DE1000F9A852 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2CA51CE12EA1356500452521 /* RVJXL.xcframework */,
+				2CA502382EA12F8700452521 /* libbrotlidec.xcframework */,
+				2CA5CD612EA12A9B00452521 /* ACIPCBTLib.tbd */,
+				2CA5CD302EA1296F00452521 /* CoreGraphics.framework */,
+				2CA5CD2E2EA1296A00452521 /* CoreImage.framework */,
 				2C0B36DC2D53DE1000F9A852 /* XCTest.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2CA5CD0E2EA1263800452521 /* JXL */ = {
+			isa = PBXGroup;
+			children = (
+				2CA5CD2C2EA1296300452521 /* libbrotlicommon.xcframework */,
+				2CA5CD242EA128A900452521 /* libjxl.xcframework */,
+				2CA5CD322EA1298100452521 /* libjxl_cms.xcframework */,
+				2CA5CD262EA1294600452521 /* libbrotlienc.xcframework */,
+				2CA5CD272EA1294600452521 /* libjxl_threads.xcframework */,
+				2CA5CD2A2EA1295B00452521 /* libhwy.xcframework */,
+			);
+			path = JXL;
 			sourceTree = "<group>";
 		};
 		4030632E93C44B22EBB1A63C /* WaitTests */ = {
@@ -483,6 +566,7 @@
 			children = (
 				9CB41CD4EBF4FCC9BF81E4E6 /* Sources */,
 				E65E21E7F02E29FEBA38D197 /* Tests */,
+				2CA5CD3A2EA1299F00452521 /* RVJXL */,
 				0270B4FD1010850D7D1B908B /* Products */,
 				2C0B36DB2D53DE1000F9A852 /* Frameworks */,
 			);
@@ -523,6 +607,7 @@
 		9CB41CD4EBF4FCC9BF81E4E6 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				2CA5CD0E2EA1263800452521 /* JXL */,
 				86367454DF23E14D681FDE27 /* Info.plist */,
 				25CB6D7740D797F781E85C43 /* SnapshotTesting */,
 			);
@@ -581,6 +666,16 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		2CA5CD342EA1299F00452521 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		0E84A93796E47328AAE7C80F /* SnapshotTesting_macOS */ = {
 			isa = PBXNativeTarget;
@@ -595,6 +690,29 @@
 			name = SnapshotTesting_macOS;
 			productName = SnapshotTesting_macOS;
 			productReference = 8F9883B60A8B403A39BCF888 /* SnapshotTesting.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2CA5CD382EA1299F00452521 /* RVJXL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2CA5CD3E2EA1299F00452521 /* Build configuration list for PBXNativeTarget "RVJXL" */;
+			buildPhases = (
+				2CA5CD342EA1299F00452521 /* Headers */,
+				2CA5CD352EA1299F00452521 /* Sources */,
+				2CA5CD362EA1299F00452521 /* Frameworks */,
+				2CA5CD372EA1299F00452521 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2CA5CD3A2EA1299F00452521 /* RVJXL */,
+			);
+			name = RVJXL;
+			packageProductDependencies = (
+			);
+			productName = RVJXL;
+			productReference = 2CA5CD392EA1299F00452521 /* RVJXL.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		4D351C54668E3B5721A83752 /* SnapshotTestingTests_macOS */ = {
@@ -691,10 +809,17 @@
 		675140927BC96A4EABE97C29 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1020;
 				TargetAttributes = {
 					2C0B36D52D53DCA800F9A852 = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					2CA51CDC2EA134EF00452521 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					2CA5CD382EA1299F00452521 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -706,6 +831,8 @@
 				en,
 			);
 			mainGroup = 56185AD4FE1BBC443C9CFDDE;
+			packageReferences = (
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -716,6 +843,8 @@
 				0E84A93796E47328AAE7C80F /* SnapshotTesting_macOS */,
 				CADC8264FEF9AEA34FCCD430 /* SnapshotTesting_tvOS */,
 				2C0B36D52D53DCA800F9A852 /* build */,
+				2CA5CD382EA1299F00452521 /* RVJXL */,
+				2CA51CDC2EA134EF00452521 /* BuildRVJSX */,
 			);
 		};
 /* End PBXProject section */
@@ -726,6 +855,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1247D995CD603F65D31746C0 /* testWait.1.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CA5CD372EA1299F00452521 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,9 +901,33 @@
 			shellPath = /bin/sh;
 			shellScript = "# Merge Script\n\n# 1\n# Set bash script to exit immediately if any commands fail.\nset -e\n\n# 2\n# Setup some constants for use later on.\nFRAMEWORK_NAME=\"SnapshotTesting\"\nSCHEME_NAME=\"SnapshotTesting_iOS\"\nFRAMEWORK_FOLDER_NAME=\"build\"\nSIMULATOR_ARCHIVE_PATH=\"${PROJECT_DIR}/build/sim\"\nIOS_DEVICE_ARCHIVE_PATH=\"${PROJECT_DIR}/build/ios\"\nCATALYST_ARCHIVE_PATH=\"${PROJECT_DIR}/build/cat\"\n\nif [ -z \"$BUILDOVERRIDE_PATH\" ]; then\nBUILDOVERRIDE_PATH=\"${PROJECT_DIR}/Products\"\nfi\nFRAMEWORK_PATH=\"${BUILDOVERRIDE_PATH}/${FRAMEWORK_NAME}.xcframework\"\n#you have to build them manually because I can't get xctest to link correctly\n\nif [ -d \"${FRAMEWORK_PATH}\" ]; then\nrm -rf \"${FRAMEWORK_PATH}\"\nfi\n\nxcodebuild -create-xcframework -framework ${SIMULATOR_ARCHIVE_PATH}/${FRAMEWORK_NAME}.framework -framework ${IOS_DEVICE_ARCHIVE_PATH}/${FRAMEWORK_NAME}.framework -framework ${CATALYST_ARCHIVE_PATH}/${FRAMEWORK_NAME}.framework -output \"${FRAMEWORK_PATH}\"\n\nBUILDSCRIPT=\"${PROJECT_DIR}/utils/codeSign.sh\"\n\nsh ${BUILDSCRIPT} ${BUILDOVERRIDE_PATH} \"Apple Development\"     \n\n";
 		};
+		2CA51CE02EA134F600452521 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Merge Script\n\n# 1\n# Set bash script to exit immediately if any commands fail.\nset -e\n\n# 2\n# Setup some constants for use later on.\nFRAMEWORK_NAME=\"RVJXL\"\nSCHEME_NAME_MAC=\"RVJXL\"\nFRAMEWORK_FOLDER_NAME=\"build\"\nSIMULATOR_ARCHIVE_PATH=\"${PROJECT_DIR}/${FRAMEWORK_FOLDER_NAME}/simulator.xcarchive\"\nIOS_DEVICE_ARCHIVE_PATH=\"${PROJECT_DIR}/${FRAMEWORK_FOLDER_NAME}/iOS.xcarchive\"\nCATALYST_ARCHIVE_PATH=\"${PROJECT_DIR}/${FRAMEWORK_FOLDER_NAME}/Catalyst.xcarchive\"\nMAC_ARCHIVE_PATH=\"${PROJECT_DIR}/${FRAMEWORK_FOLDER_NAME}/mac.xcarchive\"\n\nif [ -z \"$BUILDOVERRIDE_PATH\" ]; then\nBUILDOVERRIDE_PATH=\"${PROJECT_DIR}/Products\"\nfi\nFRAMEWORK_PATH=\"${BUILDOVERRIDE_PATH}/${FRAMEWORK_NAME}.xcframework\"\n\n\n# 3\n# If remnants from a previous build exist, delete them.\nif [ -d \"${SRCROOT}/build\" ]; then\nrm -rf \"${SRCROOT}/build\"\nfi\n\nif [ -d \"${FRAMEWORK_PATH}\" ]; then\nrm -rf \"${FRAMEWORK_PATH}\"\nfi\n\nmkdir \"${FRAMEWORK_FOLDER_NAME}\"\n\nxcodebuild archive -scheme ${FRAMEWORK_NAME} -destination=\"iOS Simulator\" -archivePath \"${SIMULATOR_ARCHIVE_PATH}\" -sdk iphonesimulator SKIP_INSTALL=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\nxcodebuild archive -scheme ${FRAMEWORK_NAME} -destination=\"iOS\" -archivePath \"${IOS_DEVICE_ARCHIVE_PATH}\" -sdk iphoneos SKIP_INSTALL=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES\n\n\n\nxcodebuild -create-xcframework \\\n    -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n    -debug-symbols ${SIMULATOR_ARCHIVE_PATH}/dSYMs/${FRAMEWORK_NAME}.framework.dSYM \\\n    -framework ${IOS_DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n    -debug-symbols ${IOS_DEVICE_ARCHIVE_PATH}/dSYMs/${FRAMEWORK_NAME}.framework.dSYM \\\n    -output \"${FRAMEWORK_PATH}\"\n\n#BUILDSCRIPT=\"${PROJECT_DIR}/utils/codeSign.sh\"\n\n#sh ${BUILDSCRIPT} ${BUILDOVERRIDE_PATH} \"Apple Development\"     \n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2CA5CD352EA1299F00452521 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4372F9413B9579D2EE893177 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1079,6 +1239,122 @@
 			};
 			name = Release;
 		};
+		2CA51CDD2EA134EF00452521 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P53Q66SK8E;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2CA51CDE2EA134EF00452521 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P53Q66SK8E;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2CA5CD3F2EA1299F00452521 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = P53Q66SK8E;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACH_O_TYPE = mh_dylib;
+				MARKETING_VERSION = 1.0;
+				MODULEMAP_FILE = "${PROJECT_DIR}/RVJXL/mymodule.modulemap";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = co.forgeandform.riveo.RVJXL;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2CA5CD402EA1299F00452521 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = P53Q66SK8E;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACH_O_TYPE = mh_dylib;
+				MARKETING_VERSION = 1.0;
+				MODULEMAP_FILE = "${PROJECT_DIR}/RVJXL/mymodule.modulemap";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = co.forgeandform.riveo.RVJXL;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		40A5D28387BCBCA2CC1FE11C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1239,6 +1515,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -1251,6 +1528,7 @@
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/RVJXL";
 				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1266,6 +1544,9 @@
 				PRODUCT_NAME = SnapshotTesting;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1277,6 +1558,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -1289,6 +1571,7 @@
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/RVJXL";
 				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1304,6 +1587,9 @@
 				PRODUCT_NAME = SnapshotTesting;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1481,6 +1767,24 @@
 			buildConfigurations = (
 				2C0B36D62D53DCA800F9A852 /* Debug */,
 				2C0B36D72D53DCA800F9A852 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2CA51CDF2EA134EF00452521 /* Build configuration list for PBXAggregateTarget "BuildRVJSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CA51CDD2EA134EF00452521 /* Debug */,
+				2CA51CDE2EA134EF00452521 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2CA5CD3E2EA1299F00452521 /* Build configuration list for PBXNativeTarget "RVJXL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CA5CD3F2EA1299F00452521 /* Debug */,
+				2CA5CD402EA1299F00452521 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

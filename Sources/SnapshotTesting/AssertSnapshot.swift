@@ -33,7 +33,7 @@ public func assertSnapshot<Value, Format>(
   named name: String? = nil,
   record recording: Bool = false,
   timeout: TimeInterval = 5,
-  file: StaticString = #file,
+  file: StaticString = #filePath,
   testName: String = #function,
   line: UInt = #line
   ) {
@@ -167,7 +167,7 @@ public func verifySnapshot<Value, Format>(
   record recording: Bool = false,
   snapshotDirectory: String? = nil,
   timeout: TimeInterval = 5,
-  file: StaticString = #file,
+  file: StaticString = #filePath,
   testName: String = #function,
   line: UInt = #line
   )

@@ -16,6 +16,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
   ///   - traits: A trait collection override.
   public static func image(
     on config: ViewImageConfig,
+    snapStrategy: SnapStrategy = .snapInNewWindow,
     onWillSnapshot: (()->())? = nil,
     precision: Float = 1,
     size: CGSize? = nil,
@@ -26,7 +27,7 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
       return SimplySnapshotting.image(precision: precision, scale: traits.displayScale).asyncPullback { viewController in
         snapshotView(
           config: size.map { .init(safeArea: config.safeArea, size: $0, traits: config.traits) } ?? config,
-          snapStrategy: .snapInNewWindow,
+          snapStrategy: snapStrategy,
           onWillSnapshot: onWillSnapshot,
           traits: traits,
           view: viewController.view,

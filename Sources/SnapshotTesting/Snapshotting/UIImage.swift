@@ -1,6 +1,24 @@
 #if os(iOS) || os(tvOS)
 import UIKit
 import XCTest
+//import RVJXL
+import UniformTypeIdentifiers
+import ImageIO.CGImageProperties
+
+extension UIImage {
+
+//  func jxlData() -> Data? {
+//
+//    JXLEncoder.encode(self.cgImage, quality: 0.1, effort: 1)
+//
+//  }
+//
+//  static func from(data: Data, scale: CGFloat) -> UIImage? {
+//    JXLDecoder.decode(data).map{UIImage(cgImage: $0, scale: scale, orientation: .up)}
+//  }
+
+
+}
 
 extension Diffing where Value == UIImage {
   /// A pixel-diffing strategy for UIImage's which requires a 100% match.
@@ -11,6 +29,60 @@ extension Diffing where Value == UIImage {
   /// - Parameter precision: A value between 0 and 1, where 1 means the images must match 100% of their pixels.
   /// - Parameter scale: Scale to use when loading the reference image from disk. If `nil` or the `UITraitCollection`s default value of `0.0`, the screens scale is used.
   /// - Returns: A new diffing strategy.
+//  public static func jxlImage(precision: Float, scale: CGFloat?) -> Diffing {
+//    let imageScale: CGFloat
+//    if let scale = scale, scale != 0.0 {
+//      imageScale = scale
+//    } else {
+//      imageScale = UIScreen.main.scale
+//    }
+//
+//    return Diffing(
+//      toData: { $0.jxlData() ?? emptyImage().jxlData()! },
+//      fromData: { UIImage.from(data: $0, scale: imageScale)! }
+//    ) { old, new in
+//      guard !compare(old, new, precision: precision) else { return nil }
+//      let difference = SnapshotTesting.diff(old, new)
+//      let message = new.size == old.size
+//      ? "Newly-taken snapshot does not match reference."
+//      : "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
+//      return (
+//        message,
+//        [],
+//        difference
+//      )
+//    }
+//  }
+
+  @available(macCatalyst 17.0, iOS 17.0, *)
+  public static func heicImage(precision: Float, scale: CGFloat?) -> Diffing {
+    let imageScale: CGFloat
+    if let scale = scale, scale != 0.0 {
+      imageScale = scale
+    } else {
+      imageScale = UIScreen.main.scale
+    }
+
+    return Diffing(
+      toData: {
+        ($0.heicData()) ?? emptyImage().heicData()! },
+      fromData: {
+        UIImage(data: $0, scale: imageScale)!
+      }
+    ) { old, new in
+      guard !compare(old, new, precision: precision) else { return nil }
+      let difference = SnapshotTesting.diff(old, new)
+      let message = new.size == old.size
+      ? "Newly-taken snapshot does not match reference."
+      : "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
+      return (
+        message,
+        [],
+        difference
+      )
+    }
+  }
+
   public static func image(precision: Float, scale: CGFloat?) -> Diffing {
     let imageScale: CGFloat
     if let scale = scale, scale != 0.0 {
@@ -28,15 +100,9 @@ extension Diffing where Value == UIImage {
       let message = new.size == old.size
       ? "Newly-taken snapshot does not match reference."
       : "Newly-taken snapshot@\(new.size) does not match reference@\(old.size)."
-      let oldAttachment = XCTAttachment(image: old)
-      oldAttachment.name = "reference"
-      let newAttachment = XCTAttachment(image: new)
-      newAttachment.name = "failure"
-      let differenceAttachment = XCTAttachment(image: difference)
-      differenceAttachment.name = "difference"
       return (
         message,
-        [oldAttachment, newAttachment, differenceAttachment],
+        [],
         difference
       )
     }
@@ -70,12 +136,30 @@ extension Snapshotting where Value == UIImage, Format == UIImage {
       diffing: .image(precision: precision, scale: scale)
     )
   }
+
+//  public static func jxlImage(precision: Float, scale: CGFloat?) -> Snapshotting {
+//    return .init(
+//      pathExtension: "jxl",
+//      diffing: .jxlImage(precision: precision, scale: scale)
+//    )
+//  }
+
+  @available(iOS 17.0, macCatalyst 17.0, *)
+  public static func heicImage(precision: Float, scale: CGFloat?) -> Snapshotting {
+    return .init(
+      pathExtension: "heic",
+      diffing: .heicImage(precision: precision, scale: scale)
+    )
+  }
 }
 
 // remap snapshot & reference to same colorspace
 let imageContextColorSpace = CGColorSpace(name: CGColorSpace.sRGB)
 let imageContextBitsPerComponent = 8
 let imageContextBytesPerPixel = 4
+
+private var oldBytesScratch: [UInt8] = []
+private var newBytesScratch: [UInt8] = []
 
 private func compare(_ old: UIImage, _ new: UIImage, precision: Float) -> Bool {
   guard let oldCgImage = old.cgImage else { return false }
@@ -97,25 +181,56 @@ private func compare(_ old: UIImage, _ new: UIImage, precision: Float) -> Bool {
   guard oldSize.height == newSize.height else { return false }
 
   let byteCount = imageContextBytesPerPixel * Int(oldSize.width) * Int(oldSize.height)
-  var oldBytes = [UInt8](repeating: 0, count: byteCount)
+  if oldBytesScratch.count < byteCount {
+    oldBytesScratch = [UInt8](repeating: 0, count: byteCount)
+  }
+  var oldBytes = oldBytesScratch
   guard let oldContext = context(for: oldCgImage, data: &oldBytes) else { return false }
   guard let oldData = oldContext.data else { return false }
   if let newContext = context(for: newCgImage), let newData = newContext.data {
     if memcmp(oldData, newData, byteCount) == 0 { return true }
   }
-  let newer = UIImage(data: new.pngData()!)!
+
+  let newer = UIImage(data: (new.pngData())!)!
   guard let newerCgImage = newer.cgImage else { return false }
-  var newerBytes = [UInt8](repeating: 0, count: byteCount)
+  if newBytesScratch.count < byteCount {
+    newBytesScratch = [UInt8](repeating: 0, count: byteCount)
+  }
+  var newerBytes = newBytesScratch
   guard let newerContext = context(for: newerCgImage, data: &newerBytes) else { return false }
   guard let newerData = newerContext.data else { return false }
   if memcmp(oldData, newerData, byteCount) == 0 { return true }
   if precision >= 1 { return false }
   var differentPixelCount = 0
   let threshold = 1 - precision
-  for byte in 0..<byteCount {
-    if oldBytes[byte] != newerBytes[byte] { differentPixelCount += 1 }
-    if Float(differentPixelCount) / Float(byteCount) > threshold { return false}
+  let oldPtr =  oldBytes.withUnsafeMutableBufferPointer{$0}.withMemoryRebound(to: UInt32.self, {$0})
+  let newPtr = newerBytes.withUnsafeMutableBufferPointer{$0}.withMemoryRebound(to: UInt32.self, {$0})
+
+  let pixelCount = byteCount/imageContextBytesPerPixel
+  let cores = 2
+  let tasksPerCore = pixelCount / cores
+  var lock = os_unfair_lock_s()
+
+  let dispatchGroup = DispatchGroup()
+  for core in 0..<cores {
+    dispatchGroup.enter()
+    DispatchQueue.global(qos: .userInitiated).async(execute:{
+      var localDifference = 0
+      let start = core * tasksPerCore
+      let end = core == cores - 1 ? pixelCount : (core + 1) * tasksPerCore
+      for x in start..<end {
+        if oldPtr[x] != newPtr[x] { localDifference += 1 }
+      }
+      os_unfair_lock_lock(&lock)
+      differentPixelCount += localDifference
+      os_unfair_lock_unlock(&lock)
+      dispatchGroup.leave()
+    })
+
   }
+  dispatchGroup.wait()
+
+  if Float(differentPixelCount) / Float(byteCount) > threshold { return false}
   return true
 }
 
