@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -397,22 +397,6 @@
 		FD800FD3282956340AD7706A /* AssertInlineSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssertInlineSnapshot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2CA5CD3D2EA1299F00452521 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			publicHeaders = (
-				JXLDecoder.h,
-				JXLEncoder.h,
-				RVJXL.h,
-			);
-			target = 2CA5CD382EA1299F00452521 /* RVJXL */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2CA5CD3A2EA1299F00452521 /* RVJXL */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CA5CD3D2EA1299F00452521 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = RVJXL; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		1F992A9F69421CE0653EFBE5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -566,7 +550,6 @@
 			children = (
 				9CB41CD4EBF4FCC9BF81E4E6 /* Sources */,
 				E65E21E7F02E29FEBA38D197 /* Tests */,
-				2CA5CD3A2EA1299F00452521 /* RVJXL */,
 				0270B4FD1010850D7D1B908B /* Products */,
 				2C0B36DB2D53DE1000F9A852 /* Frameworks */,
 			);
@@ -704,9 +687,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2CA5CD3A2EA1299F00452521 /* RVJXL */,
 			);
 			name = RVJXL;
 			packageProductDependencies = (
